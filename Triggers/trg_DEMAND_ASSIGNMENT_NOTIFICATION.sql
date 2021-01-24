@@ -16,14 +16,14 @@ BEGIN
 		   SET @EmployeeFullame = (SELECT CONCAT(EMPLOYEE_NAME, ' ', EMPLOYEE_SURNAME) FROM EMPLOYEE
 								   WHERE ID = @EmployeeId);
 
-		   SET @Company_UserId = (SELECT COMPANY_USER_EMAIL FROM COMPANY_USER WHERE ID = @Company_UserId)
+		   DECLARE @Company_User_Email NVARCHAR(50) = (SELECT COMPANY_USER_EMAIL FROM COMPANY_USER WHERE ID = @Company_UserId)
 
 		   IF @Demand_StateId = 3
 		   BEGIN
 			 declare @body varchar(500) = 'Your demand is assigned to ' + CAST(@EmployeeFullame AS VARCHAR(100))
 				   EXEC msdb.dbo.sp_send_dbmail
 						@profile_name = 'AdminSql'
-					   ,@recipients = @Company_UserId
+					   ,@recipients = @Company_User_Email
 					   ,@subject = 'Assignment'
 					   ,@body = @body
 					   ,@importance ='HIGH'
